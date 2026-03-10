@@ -1,5 +1,5 @@
 from src.UI.Pages.base_page import BasePage
-from playwright.sync_api import Page
+from playwright.sync_api import Page, expect
 
 log_in_btn = '[id="login2"]'
 sign_in_btn = '[id="signin2"]'
@@ -66,3 +66,28 @@ class HomePage(BasePage):
             if 'active' in item.get_attribute('class'):
                 return i
         return None
+
+    def click_category_phones(self):
+        return self.page.get_by_role('link', name="Phones").click()
+
+    def click_category_laptops(self):
+        return self.page.get_by_role('link', name="Laptops").click()
+
+    def click_category_monitors(self):
+        return self.page.get_by_role('link', name="Monitors").click()
+
+    def get_title_products(self):
+        titles = self.page.locator('.card-title a')
+        expect(titles.first).to_be_visible()
+        result = []
+        for i in range(titles.count()):
+            result.append(titles.nth(i).inner_text())
+        return result
+
+    def get_link_products(self):
+        links = self.page.locator('.card-title a')
+        expect(links.first).to_be_visible()
+        result = []
+        for i in range(links.count()):
+            result.append(links.nth(i).get_attribute('href'))
+        return result

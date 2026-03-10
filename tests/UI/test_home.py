@@ -60,3 +60,28 @@ def test_prev_item_carousel_indicator(home_page_auth):
     assert items.nth(new_item_index).is_visible()
 
     assert new_item_index == new_indicator_index
+
+def test_select_category(home_page_auth):
+    home_page_auth.open(BASE_URL)
+    old_titles = home_page_auth.get_title_products()
+    old_hrefs = home_page_auth.get_link_products()
+    assert len(old_titles) > 0
+    assert len(old_hrefs) > 0
+
+    print(old_hrefs)
+    home_page_auth.click_category_phones()
+    home_page_auth.page.wait_for_function(
+        """oldTitles => {
+            const titles = Array.from(document.querySelectorAll('.card-title a'))
+                .map(el => el.textContent.trim());
+            return JSON.stringify(titles) !== JSON.stringify(oldTitles);
+        }""",
+        arg=old_titles
+    )
+
+    new_titles = home_page_auth.get_title_products()
+    new_hrefs = home_page_auth.get_link_products()
+    assert len(new_titles) > 0
+    assert len(new_hrefs) > 0
+    assert old_titles != new_titles
+    assert old_hrefs != new_hrefs
