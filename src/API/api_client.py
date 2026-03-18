@@ -7,5 +7,4 @@ class ClientApi:
 
     def request(self, method, path, **kwargs):
         url = f'{self.base_url}/{path.lstrip('/')}'
-        print(url, self.base_url)
         return self.session.request(method, url, **kwargs)
